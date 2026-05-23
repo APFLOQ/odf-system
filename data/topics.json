@@ -1,0 +1,51 @@
+{
+  "categories": [
+    {
+      "id": "foundation",
+      "name": "Foundation",
+      "topics": [
+        { "id": "cpd", "name": "Change Point Detection", "short": "CPD" },
+        { "id": "sb", "name": "Structural Breaks", "short": "SB" },
+        { "id": "ic", "name": "Information Criteria", "short": "IC" },
+        { "id": "amarket", "name": "Adoption Market", "short": "AMT" },
+        { "id": "mktfailure", "name": "Market Failures", "short": "FAIL" }
+      ]
+    },
+    {
+      "id": "structure",
+      "name": "Structure",
+      "topics": [
+        { "id": "hms", "name": "Hamilton Markov", "short": "HMS" },
+        { "id": "hmm", "name": "Hidden Markov Models", "short": "HMM" },
+        { "id": "vol", "name": "Volatility Regimes", "short": "VOL" },
+        { "id": "regimes", "name": "Regime Theory", "short": "REG" }
+      ]
+    },
+    {
+      "id": "advanced",
+      "name": "Advanced",
+      "topics": [
+        { "id": "mm", "name": "Market Microstructure", "short": "MM" },
+        { "id": "cr", "name": "Correlation Regimes", "short": "CR" },
+        { "id": "ml", "name": "Machine Learning", "short": "ML" },
+        { "id": "dl", "name": "Deep Learning", "short": "DL" }
+      ]
+    },
+    {
+      "id": "applications",
+      "name": "Applications",
+      "topics": [
+        { "id": "ta", "name": "Trading Applications", "short": "TA" },
+        { "id": "opt", "name": "Portfolio Optimization", "short": "OPT" },
+        { "id": "risk", "name": "Risk Management", "short": "RSK" }
+      ]
+    }
+  ],
+  "relations": [
+    { "source": "foundation", "target": "structure", "type": "cross" },
+    { "source": "structure", "target": "advanced", "type": "cross" },
+    { "source": "structure", "target": "applications", "type": "cross" },
+    { "source": "advanced", "target": "applications", "type": "cross" },
+    { "source": "foundation", "target": "applications", "type": "cross" }
+  ]
+}

@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Regimes — Guía Completa</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg-deep:#04050a;--bg:#07090e;--bg2:#0b0e16;--bg3:#10131c;--bg4:#161a26;--bg5:#1c2030;--border:rgba(255,255,255,0.04);--border2:rgba(255,255,255,0.08);--border3:rgba(255,255,255,0.14);--text:#e8ecf5;--text2:#8a95a9;--text3:#5a6478;--text4:#3a4558;--accent:#3b82f6;--accent2:#60a5fa;--accent3:#93c5fd;--green:#10b981;--green2:#34d399;--green3:#6ee7b7;--amber:#f59e0b;--amber2:#fbbf24;--amber3:#fcd34d;--red:#ef4444;--red2:#f87171;--red3:#fca5a5;--purple:#8b5cf6;--purple2:#a78bfa;--purple3:#c4b5fd;--teal:#06b6d4;--teal2:#22d3ee;--pink:#ec4899;--pink2:#f472b6;--orange:#fb923c;--indigo:#6366f1;--font:'JetBrains Mono','Fira Code','Cascadia Code',monospace;--sans:'Inter',-apple-system,BlinkMacSystemFont,sans-serif}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg-deep);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.8;min-height:100vh}
+#nav{position:fixed;left:0;top:0;bottom:0;width:272px;background:var(--bg);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:1000}
+.nav-header{padding:20px 20px 16px;border-bottom:1px solid var(--border)}
+.nav-logo{font-family:var(--font);font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent2);margin-bottom:4px}
+.nav-subtitle{font-size:10px;color:var(--text4);font-family:var(--font)}
+.nav-progress-wrap{padding:12px 20px;border-bottom:1px solid var(--border)}
+.nav-progress-label{font-size:10px;color:var(--text4);font-family:var(--font);display:flex;justify-content:space-between;margin-bottom:6px}
+.nav-progress-bar{height:3px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.nav-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--teal));width:8%;transition:width 0.3s ease}
+.nav-scroll{flex:1;overflow-y:auto;padding:12px 0}
+.nav-section{margin-bottom:8px}
+.nav-section-title{font-family:var(--font);font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text4);padding:8px 20px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:7px 20px;cursor:pointer;font-size:12.5px;color:var(--text2);transition:all 0.15s ease;border:none;background:none;width:100%;text-align:left;text-decoration:none}
+.nav-item:hover{background:var(--bg2);color:var(--text)}
+.nav-item.active{background:rgba(59,130,246,0.12);color:var(--accent2)}
+.nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;opacity:0.6}
+#main{margin-left:272px;min-height:100vh}
+.top-bar{position:fixed;top:0;left:272px;right:0;height:2px;background:var(--border);z-index:999}
+.top-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--purple),var(--teal),var(--green));width:0%;transition:width 0.15s linear}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:100px 100px 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 100% 60% at 15% 35%,rgba(59,130,246,0.12),transparent 50%),radial-gradient(ellipse 80% 50% at 85% 75%,rgba(139,92,246,0.08),transparent 50%),radial-gradient(ellipse 60% 40% at 50% 90%,rgba(6,182,212,0.04),transparent 50%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:64px 64px;opacity:0.25;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 20%,transparent 70%)}
+.hero-label{font-family:var(--font);font-size:11px;color:var(--accent);letter-spacing:0.25em;text-transform:uppercase;margin-bottom:20px}
+.hero-title{font-size:clamp(52px,9vw,96px);font-weight:800;color:var(--text);letter-spacing:-0.04em;line-height:0.92;margin-bottom:28px}
+.hero-title .accent{background:linear-gradient(135deg,var(--accent2),var(--purple2),var(--teal2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-subtitle{font-size:17px;color:var(--text2);max-width:680px;line-height:1.85;margin-bottom:48px}
+.hero-stats{display:flex;gap:56px;flex-wrap:wrap}
+.stat-card{text-align:left}
+.stat-num{font-family:var(--font);font-size:36px;font-weight:700;display:block;line-height:1}
+.stat-num.blue{color:var(--accent2)}.stat-num.purple{color:var(--purple2)}.stat-num.teal{color:var(--teal2)}.stat-num.green{color:var(--green2)}
+.stat-label{font-size:11px;color:var(--text4);font-family:var(--font);text-transform:uppercase;letter-spacing:0.12em;margin-top:8px;display:block}
+.module{padding:100px 100px;border-top:1px solid var(--border);max-width:1300px}
+.module-header{margin-bottom:56px}
+.module-num{font-family:var(--font);font-size:11px;color:var(--text4);letter-spacing:0.2em;margin-bottom:14px}
+.module-title{font-size:40px;font-weight:700;color:var(--text);letter-spacing:-0.03em;line-height:1.1;margin-bottom:14px}
+.module-desc{font-size:15px;color:var(--text3);max-width:760px;line-height:1.8}
+.topic-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:18px;overflow:hidden}
+.topic-card:hover{border-color:var(--border2)}
+.topic-header{display:flex;align-items:center;justify-content:space-between;padding:20px 28px;cursor:pointer;gap:16px}
+.topic-left{display:flex;align-items:center;gap:16px}
+.topic-icon{width:40px;height:40px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-family:var(--font);font-size:16px}
+.topic-title{font-size:17px;font-weight:600;color:var(--text);line-height:1.35}
+.topic-tag{font-family:var(--font);font-size:9px;padding:4px 10px;border-radius:5px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em}
+.tag-core{background:rgba(59,130,246,0.15);color:var(--accent3)}.tag-advanced{background:rgba(239,68,68,0.15);color:var(--red2)}.tag-quant{background:rgba(139,92,246,0.15);color:var(--purple3)}
+.topic-chevron{color:var(--text4);font-size:18px}
+.topic-card.open .topic-chevron{transform:rotate(180deg)}
+.topic-body{display:none;border-top:1px solid var(--border)}
+.topic-card.open .topic-body{display:block}
+.topic-content{padding:32px 40px 44px}
+.topic-content>p{font-size:15px;color:var(--text2);line-height:1.9;margin-bottom:20px}
+.subtopic-block{margin-bottom:32px}
+.subtopic-title{font-family:var(--font);font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.subtopic-num{font-size:10px;color:var(--accent);background:rgba(59,130,246,0.12);padding:3px 8px;border-radius:5px}
+.subtopic-text{font-size:14.5px;color:var(--text2);line-height:1.9;padding-left:28px}
+.subtopic-text>p{margin-bottom:14px}
+.subtopic-text strong{color:var(--text);font-weight:600}
+.formula-box{background:var(--bg);border:1px solid var(--border2);border-radius:var(--radius-md);padding:22px 28px;margin:28px 0;font-family:var(--font);font-size:13px;color:var(--teal2);overflow-x:auto;line-height:1.75}
+.formula-box .comment{color:var(--text4);font-size:11px}.formula-box .highlight{color:var(--purple2)}
+.code-block{background:var(--bg);border:1px solid var(--border2);border-radius:var(--radius-md);margin:28px 0;overflow:hidden}
+.code-header{display:flex;align-items:center;padding:12px 18px;background:var(--bg3);border-bottom:1px solid var(--border);gap:8px}
+.code-dot{width:11px;height:11px;border-radius:50%}.code-dot.red{background:#ff5f57}.code-dot.yellow{background:#febc2e}.code-dot.green{background:#28c840}
+.code-lang{font-family:var(--font);font-size:10px;color:var(--text4);margin-left:auto;text-transform:uppercase}
+.code-content{padding:18px 24px;font-family:var(--font);font-size:12.5px;line-height:1.75;color:var(--text2);overflow-x:auto}
+.code-content .keyword{color:var(--pink2)}.code-content .string{color:var(--green2)}.code-content .comment{color:var(--text4)}.code-content .function{color:var(--accent2)}.code-content .number{color:var(--amber2)}
+.cmp-table-wrap{margin:28px 0;overflow-x:auto}
+.cmp-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.cmp-table th{background:var(--bg3);color:var(--text2);font-weight:600;padding:14px 18px;text-align:left;border:1px solid var(--border);font-family:var(--font);font-size:10px;text-transform:uppercase}
+.cmp-table td{padding:14px 18px;border:1px solid var(--border);color:var(--text2)}
+.study-timeline{position:relative;padding-left:48px}
+.study-timeline::before{content:'';position:absolute;left:18px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,var(--accent),var(--purple),var(--teal),var(--green));opacity:0.4}
+.timeline-item{position:relative;padding-bottom:40px}
+.timeline-dot{position:absolute;left:-48px;top:0;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font);font-size:9px;font-weight:600;z-index:1;border:2px solid}
+.timeline-content{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:24px 28px}
+.timeline-period{font-family:var(--font);font-size:11px;margin-bottom:10px;opacity:0.6}
+.timeline-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:10px}
+.timeline-desc{font-size:14px;color:var(--text2);line-height:1.85}
+.callout{display:flex;gap:16px;padding:18px 22px;border-radius:var(--radius-md);margin:28px 0;font-size:14.5px;line-height:1.8}
+.callout-info{background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.18)}.callout-warning{background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.18)}.callout-success{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.18)}
+.callout-icon{font-size:20px;flex-shrink:0}.callout-info .callout-icon{color:var(--accent2)}.callout-warning .callout-icon{color:var(--amber)}.callout-success .callout-icon{color:var(--green)}
+.resource-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.resource-pill{font-family:var(--font);font-size:11px;padding:6px 14px;border-radius:6px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2)}
+@media(max-width:1100px){nav{transform:translateX(-100%)}#main{margin-left:0}.module{padding:60px 36px}.hero{padding:60px 36px}}
+</style>
+</head>
+<body>
+<div class="top-bar"><div class="top-bar-fill" id="topBar"></div></div>
+<nav id="nav">
+  <div class="nav-header"><div class="nav-logo">Market Regimes</div><div class="nav-subtitle">Guía Completa · 2025</div></div>
+  <div class="nav-progress-wrap"><div class="nav-progress-label"><span>Progreso</span><span id="progressPct">0%</span></div><div class="nav-progress-bar"><div class="nav-progress-fill" id="navProgress"></div></div></div>
+  <div class="nav-scroll">
+    <div class="nav-section"><div class="nav-section-title">Introducción</div><a href="#hero" class="nav-item active"><span class="nav-dot" style="background:var(--accent)"></span>Mapa</a><a href="#timeline" class="nav-item"><span class="nav-dot" style="background:var(--text4)"></span>Plan</a></div>
+    <div class="nav-section"><div class="nav-section-title">Módulo 1 — Fundamentos</div><a href="#m1" class="nav-item"><span class="nav-dot" style="background:var(--amber)"></span>Change Point Detection</a><a href="#m2" class="nav-item"><span class="nav-dot" style="background:var(--amber)"></span>Structural Breaks</a><a href="#m3" class="nav-item"><span class="nav-dot" style="background:var(--amber)"></span>Criterios K</a></div>
+    <div class="nav-section"><div class="nav-section-title">Módulo 2 — MS Models</div><a href="#m4" class="nav-item"><span class="nav-dot" style="background:var(--purple)"></span>Hamilton MS Model</a><a href="#m5" class="nav-item"><span class="nav-dot" style="background:var(--purple)"></span>Filtro Hamilton</a></div>
+    <div class="nav-section"><div class="nav-section-title">Módulo 3 — HMM</div><a href="#m7" class="nav-item"><span class="nav-dot" style="background:var(--teal)"></span>Arquitectura HMM</a><a href="#m8" class="nav-item"><span class="nav-dot" style="background:var(--teal)"></span>Baum-Welch</a><a href="#m9" class="nav-item"><span class="nav-dot" style="background:var(--teal)"></span>HMM Multivariado</a></div>
+    <div class="nav-section"><div class="nav-section-title">Módulo 4 — Volatilidad</div><a href="#m10" class="nav-item"><span class="nav-dot" style="background:var(--red)"></span>Vol Regimes</a><a href="#m11" class="nav-item"><span class="nav-dot" style="background:var(--red)"></span>VIX Term Structure</a><a href="#m12" class="nav-item"><span class="nav-dot" style="background:var(--red)"></span>HAR-RV</a></div>
+    <div class="nav-section"><div class="nav-section-title">Módulo 5 — Microestructura</div><a href="#m13" class="nav-item"><span class="nav-dot" style="background:var(--green)"></span>PIN / VPIN</a><a href="#m14" class="nav-item"><span class="nav-dot" style="background:var(--green)"></span>DOM & Footprint</a></div>
+    <div class="nav-section"><div class="nav-section-title">Módulo 6 — Correlaciones</div><a href="#m16" class="nav-item"><span class="nav-dot" style="background:var(--orange)"></span>DCC-GARCH</a><a href="#m17" class="nav-item"><span class="nav-dot" style="background:var(--orange)"></span>Copulas</a><a href="#m18" class="nav-item"><span class="nav-dot" style="background:var(--orange)"></span>Risk-On/Off</a></div>
+    <div class="nav-section"><div class="nav-section-title">Módulo 7 — ML</div><a href="#m19" class="nav-item"><span class="nav-dot" style="background:var(--pink)"></span>Clustering</a><a href="#m20" class="nav-item"><span class="nav-dot" style="background:var(--pink)"></span>BOCPD</a><a href="#m21" class="nav-item"><span class="nav-dot" style="background:var(--pink)"></span>Deep Learning</a></div>
+    <div class="nav-section"><div class="nav-section-title">Módulo 8 — Opciones</div><a href="#m22" class="nav-item"><span class="nav-dot" style="background:var(--indigo)"></span>GEX / DEX</a><a href="#m23" class="nav-item"><span class="nav-dot" style="background:var(--indigo)"></span>Vol Surface</a><a href="#m24" class="nav-item"><span class="nav-dot" style="background:var(--indigo)"></span>0DTE</a></div>
+    <div class="nav-section"><div class="nav-section-title">Módulo 9 — Real-Time</div><a href="#m25" class="nav-item"><span class="nav-dot" style="background:var(--accent)"></span>SPRT & CUSUM</a><a href="#m26" class="nav-item"><span class="nav-dot" style="background:var(--accent)"></span>Particle Filters</a></div>
+    <div class="nav-section"><div class="nav-section-title">Módulo 10 — Trading</div><a href="#m28" class="nav-item"><span class="nav-dot" style="background:var(--green)"></span>Position Sizing</a><a href="#m29" class="nav-item"><span class="nav-dot" style="background:var(--green)"></span>Strategy Selection</a><a href="#m30" class="nav-item"><span class="nav-dot" style="background:var(--green)"></span>Portfolio</a></div>
+  </div>
+</nav>
+<main id="main">
+<div class="hero" id="hero">
+  <div class="hero-bg"></div><div class="hero-grid"></div>
+  <div class="hero-label">// Guía de estudio avanzada · 2025</div>
+  <h1 class="hero-title">Market<br><span class="accent">Regimes</span></h1>
+  <p class="hero-subtitle">Esta guía cubre el espectro completo del análisis de regímenes de mercado: desde la detección estadística de cambios estructurales (Chow, Bai-Perron, CUSUM) hasta la implementación de Hidden Markov Models, modelos de volatilidad (GARCH, HAR-RV), microestructura de mercado (PIN/VPIN, order flow), y aplicaciones prácticas de trading con position sizing adaptativo y selección de estrategias por régimen. Cada tema incluye ejemplos con código Python completo y referencias a papers académicos fundamentales.</p>
+  <div class="hero-stats"><div class="stat-card"><span class="stat-num blue">10</span><span class="stat-label">Módulos</span></div><div class="stat-card"><span class="stat-num purple">30+</span><span class="stat-label">Temas</span></div><div class="stat-card"><span class="stat-num teal">150+</span><span class="stat-label">Subtópicos</span></div><div class="stat-card"><span class="stat-num green">∞</span><span class="stat-label">Profundidad</span></div></div>
+</div>
+
+<section class="module" id="timeline">
+  <div class="module-header"><div class="module-num">// 00</div><h2 class="module-title">Plan de estudio recomendado</h2><p class="module-desc">Secuencia óptima de aprendizaje. Cada semana profundiza en los conceptos previos, construyéndolos sobre la base establecida.</p></div>
+  <div class="study-timeline">
+    <div class="timeline-item"><div class="timeline-dot" style="background:rgba(245,158,11,0.15);border-color:var(--amber);color:var(--amber2)">W1-2</div><div class="timeline-content"><div class="timeline-period">Semanas 1-2 · 14-16 horas</div><div class="timeline-title" style="color:var(--amber2)">Bases estadísticas y change point detection</div><div class="timeline-desc"><strong>Conceptos centrales:</strong> Stationarity (ADF, KPSS), structural breaks (Chow, Bai-Perron), change point detection (PELT, WBS, BOCPD). Entender la diferencia entre tests de hipótesis que requieren conocer el break point vs. métodos de búsqueda que lo estiman simultáneamente. Dominar CUSUM clásico y sus variantes. Estudiar los criterios de información (AIC/BIC/HQ) para determinar el número óptimo de regímenes.</div></div></div>
+    <div class="timeline-item"><div class="timeline-dot" style="background:rgba(139,92,246,0.15);border-color:var(--purple);color:var(--purple2)">W3-4</div><div class="timeline-content"><div class="timeline-period">Semanas 3-4 · 16-18 horas</div><div class="timeline-title" style="color:var(--purple2)">Hamilton Markov Switching y familia MS</div><div class="timeline-desc"><strong>Conceptos centrales:</strong> El paper de Hamilton (1989, Journal of Econometrics) es el origen de todo. Implementar desde cero: el filtro de Hamilton (forward pass), el smoother de Kim (backward pass), el algoritmo EM para estimación. Entender cómo la matriz de transición P captura la persistencia del régimen y cómo calcular la duración esperada. MS-VAR y MS-GARCH son extensiones directas.</div></div></div>
+    <div class="timeline-item"><div class="timeline-dot" style="background:rgba(6,182,212,0.15);border-color:var(--teal);color:var(--teal2)">W5-6</div><div class="timeline-content"><div class="timeline-period">Semanas 5-6 · 16-20 horas</div><div class="timeline-title" style="color:var(--teal2)">Hidden Markov Models — los tres problemas de Rabiner</div><div class="timeline-desc"><strong>Conceptos centrales:</strong> Rabiner (1989, IEEE) estableció la teoría formal de HMM con tres problemas: (1) Evaluation — calcular P(O|λ) con el algoritmo forward, (2) Decoding — encontrar la secuencia óptima de estados con Viterbi, (3) Learning — estimar λ con Baum-Welch (EM). Gaussian HMM vs. GMM-HMM: para retornos de futuros, Gaussian HMM con K=3-4 estados suele ser superior.</div></div></div>
+    <div class="timeline-item"><div class="timeline-dot" style="background:rgba(239,68,68,0.15);border-color:var(--red);color:var(--red2)">W7-8</div><div class="timeline-content"><div class="timeline-period">Semanas 7-8 · 14-18 horas</div><div class="timeline-title" style="color:var(--red2)">Volatility y Correlation Regimes</div><div class="timeline-desc"><strong>Conceptos centrales:</strong> HAR-RV (Corsi 2009) captura la dependencia heterogénea de la volatilidad realised usando tres componentes (diario, semanal, mensual). VIX term structure como indicador de régimen (contango vs. backwardation). DCC-GARCH (Engle 2002) para matrices de correlación dinámicas. Copulas para capturar dependencia no-lineal y tail dependence.</div></div></div>
+    <div class="timeline-item"><div class="timeline-dot" style="background:rgba(16,185,129,0.15);border-color:var(--green);color:var(--green2)">W9-10</div><div class="timeline-content"><div class="timeline-period">Semanas 9-10 · 16-20 horas</div><div class="timeline-title" style="color:var(--green2)">Microestructura y Order Flow</div><div class="timeline-desc"><strong>Conceptos centrales:</strong> PIN (Easley & O'Hara 1987, 1992) mide la probabilidad de trading informado. VPIN (Easley, López de Prado, O'Hara 2012) es la versión sincronizada por volumen. Order Flow Imbalance (OFI) de Cont, Kukanov & Stoikov (2014) captura el desequilibrio a nivel de libro de órdenes. DOM absorption/exhaustion.</div></div></div>
+    <div class="timeline-item"><div class="timeline-dot" style="background:rgba(236,72,153,0.15);border-color:var(--pink);color:var(--pink2)">W11-12</div><div class="timeline-content"><div class="timeline-period">Semanas 11-12 · 18-22 horas</div><div class="timeline-title" style="color:var(--pink2)">Machine Learning para Regímenes</div><div class="timeline-desc"><strong>Conceptos centrales:</strong> GMM clustering como alternativa a HMM. BOCPD (Adams & MacKay 2007) — el algoritmo más elegante para detección en tiempo real. LSTM para clasificación de regímenes. Autoencoders para anomaly detection. El peligro: overfitting catastrophic si no se usa validación adecuada.</div></div></div>
+    <div class="timeline-item"><div class="timeline-dot" style="background:rgba(99,102,241,0.15);border-color:var(--indigo);color:var(--accent3)">W13-14</div><div class="timeline-content"><div class="timeline-period">Semanas 13-14 · 16-20 horas</div><div class="timeline-title" style="color:var(--accent3)">Options Regimes y Detección Real-Time</div><div class="timeline-desc"><strong>Conceptos centrales:</strong> GEX/DEX (Patton & Sandmann 2020) — la gamma exposure de dealers como fuerza estructurante del precio. Charm y vanna flows. Vol surface regime classification. SPRT (Wald 1945) — el test secuencial óptimo para detectar cambios de régimen en tiempo real.</div></div></div>
+    <div class="timeline-item"><div class="timeline-dot" style="background:rgba(52,211,153,0.15);border-color:var(--green);color:var(--green2)">W15-16</div><div class="timeline-content"><div class="timeline-period">Semanas 15-16 · 14-18 horas</div><div class="timeline-title" style="color:var(--green2)">Trading Applications — Sizing, Strategies, Portfolio</div><div class="timeline-desc"><strong>Conceptos centrales:</strong> Kelly fraction por régimen: f*(Sₜ) = μ(Sₜ)/σ²(Sₜ). El sizing adaptativo es el mecanismo más directo para controlar drawdown. Volatility targeting por régimen. Regime-strategy mapping: trend following vs. mean-reversion vs. stat arb según el estado del mercado.</div></div></div>
+  </div>
+</section>
+
+<section class="module" id="m1">
+  <div class="module-header"><div class="module-num">// MÓDULO 01</div><h2 class="module-title">Change Point Detection — Más Allá del CUSUM Básico</h2><p class="module-desc">El problema central de la detección de regímenes: dado un proceso estocástico {Xₜ}, determinar si sus parámetros fundamentales (media, varianza, covarianza) cambian en algún punto τ desconocido. Esta sección cubre los métodos modernos con complejidad O(n) que escalan a millones de observaciones.</p></div>
+
+  <div class="topic-card open">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(245,158,11,0.15)">▸</div><div class="topic-title">PELT — Pruned Exact Linear Time (Killick, Fearnhead, Eckley 2012)</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-core">core</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>PELT es el algoritmo de referencia para detección de múltiples change points cuando se necesita exactitud. La innovación central es usar programación dinámica con podas (pruning) que reducen la complejidad de O(n²) a O(n) en promedio.</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">1.1</span>La mecánica de la poda — por qué funciona</div><div class="subtopic-text"><p>El algoritmo minimiza una función de costo penalizada: Q(τ₁...τₖ) = Σᵢ C(y_{τᵢ₋₁:τᵢ}) + β·K, donde C(y_{s:t}) mide la "inconsistencia" del segmento [s,t] y β es el factor de penalización.</p><p>La poda funciona así: para cada punto t, se mantiene una lista de "candidatos". Si el costo de pasar por un candidato es mayor que el costo de saltarlo, ese candidato se poda permanentemente. En la práctica, esto elimina ~90% de los candidatos en datos financieros.</p></div></div>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">1.2</span>La penalización óptima — el problema de β</div><div class="subtopic-text"><p>La elección de β no es trivial:</p><p><strong>Para detección sensible (trading):</strong> usar segmentación cuadrática con β = log(log(n))·2σ², lo que da ~20% más de change points.</p><p><strong>Para detección robusta (análisis):</strong> usar BIC con validación fuera de muestra.</p></div></div>
+      <div class="formula-box">
+<span class="comment">// PELT Cost Function</span>
+C(y_{s:t}) = Σ<sub>i=s</sub><sup>t-1</sup> (yᵢ - μ<sub>s:t</sub>)²
+<span class="comment">// PELT recursion: F(t) = min_{s<t} { F(s) + C(y_{s:t}) + β }</span>
+<span class="highlight">BIC:      pen = log(n) · 2 · σ²_returns</span>
+<span class="highlight">AIC:      pen = 2 · 2 · σ²_returns</span>
+<span class="comment">// Para returns diarios típicos: pen ≈ 0.03-0.08</span>
+      </div>
+      <div class="code-block"><div class="code-header"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div><span class="code-lang">python</span></div><div class="code-content">
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">import</span> ruptures <span class="keyword">as</span> rpt
+
+returns = np.load(<span class="string">'nq_daily_returns.npy'</span>)
+
+<span class="comment"># PELT — detección automática del número de cambios</span>
+algo_pelt = rpt.Pelt(model=<span class="string">'rbf'</span>).fit(returns)
+changepoints_pelt = algo_pelt.predict(pen=<span class="number">0.05</span>)
+
+<span class="comment"># BinSeg — cuando necesitas especificar el número máximo</span>
+algo_binseg = rpt.BinSeg(model=<span class="string">'l2'</span>).fit(returns)
+changepoints_binseg = algo_binseg.predict(n_bkps=<span class="number">8</span>)
+
+<span class="keyword">def</span> <span class="function">compute_detection_metrics</span>(true_breaks, detected_breaks, tolerance=<span class="number">5</span>):
+    hits = <span class="number">0</span>; lags = []
+    <span class="keyword">for</span> tb <span class="keyword">in</span> true_breaks:
+        distances = [abs(tb - db) <span class="keyword">for</span> db <span class="keyword">in</span> detected_breaks]
+        min_dist = min(distances) <span class="keyword">if</span> distances <span class="keyword">else</span> <span class="number">999</span>
+        <span class="keyword">if</span> min_dist <= tolerance: hits += <span class="number">1</span>; lags.append(min_dist)
+    precision = hits / len(detected_breaks) <span class="keyword">if</span> detected_breaks <span class="keyword">else</span> <span class="number">0</span>
+    recall = hits / len(true_breaks) <span class="keyword">if</span> true_breaks <span class="keyword">else</span> <span class="number">0</span>
+    adl = np.mean(lags) <span class="keyword">if</span> lags <span class="keyword">else</span> <span class="number">999</span>
+    <span class="keyword">return</span> {<span class="string">'precision'</span>: precision, <span class="string">'recall'</span>: recall, <span class="string">'adl'</span>: adl}
+      </div></div>
+      <div class="callout callout-info"><span class="callout-icon">◈</span><span><strong>Aplicación en NQ:</strong> En datos intradiarios (5-min), PELT con pen=0.05 detecta típicamente 8-15 change points por día de trading. Los más importantes ocurren en apertura (9:30-10:00) y cerca del cierre (15:00-15:30).</span></div>
+      <div class="resource-row"><span class="resource-pill">ruptures Python</span><span class="resource-pill">Killick et al. 2012 JASA</span></div>
+    </div></div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(245,158,11,0.15)">▸</div><div class="topic-title">BOCPD — Bayesian Online Changepoint Detection</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-advanced">avanzado</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>Adams & MacKay (2007) desarrollaron BOCPD, que calcula recursivamente P(rₜ | x₁:t) donde rₜ es el "run length" — el tiempo transcurrido desde el último change point.</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">2.1</span>El concepto de run length</div><div class="subtopic-text"><p>rₜ ∈ {0, 1, 2, ...} donde rₜ = k significa "el último cambio ocurrió hace exactamente k barras". La distribución P(rₜ | x₁:t) es el output principal del algoritmo.</p></div></div>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">2.2</span>La hazard function — controlando la tasa de cambios</div><div class="subtopic-text"><p>La hazard function H(r) define la probabilidad de un change point en cada run length r. Para datos de mercado, p_old = 0.999 (media de duración ≈ 1000 barras) es un buen punto de partida.</p></div></div>
+      <div class="formula-box">
+<span class="comment">// BOCPD Recursion</span>
+P(rₜ = r | x₁:t₋₁) = P(rₜ₋₁ = r-1 | x₁:t₋₁) · (1 - H(r)) + Σ<sub>k>r</sub> P(rₜ₋₁ = k | x₁:t₋₁) · H(k)
+<span class="comment">// Predictive probability (conjugate Normal-Inverse-Gamma)</span>
+p(xₜ | r, params) = Student_t(xₜ; μ, σ²·(r+1)/r, ν)
+      </div>
+      <div class="code-block"><div class="code-header"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div><span class="code-lang">python</span></div><div class="code-content">
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> scipy.stats <span class="keyword">import</span> t as student_t
+
+<span class="keyword">class</span> <span class="function">BOCPD</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, hazard_func=<span class="keyword">lambda</span> r: <span class="number">1.0</span>/<span class="number">100</span>):
+        self.hazard = hazard_func
+        self.run_lengths = np.array([<span class="number">1.0</span>])
+        self.stats = [{<span class="string">'mu'</span>: <span class="number">0.0</span>, <span class="string">'kappa'</span>: <span class="number">1.0</span>, <span class="string">'alpha'</span>: <span class="number">1.0</span>, <span class="string">'beta'</span>: <span class="number">1.0</span>}]
+    
+    <span class="keyword">def</span> <span class="function">predictive_pdf</span>(self, x, stats):
+        df = <span class="number">2</span> * stats[<span class="string">'alpha'</span>]
+        scale = np.sqrt(stats[<span class="string">'beta'</span>] / stats[<span class="string">'alpha'</span>] / stats[<span class="string">'kappa'</span>])
+        <span class="keyword">return</span> student_t.pdf(x, df, loc=stats[<span class="string">'mu'</span>], scale=scale)
+    
+    <span class="keyword">def</span> <span class="function">update</span>(self, x):
+        self.run_lengths = np.concatenate([[<span class="number">0.0</span>], self.run_lengths])
+        self.stats = [{<span class="string">'mu'</span>: <span class="number">0.0</span>, <span class="string">'kappa'</span>: <span class="number">1.0</span>, <span class="string">'alpha'</span>: <span class="number">1.0</span>, <span class="string">'beta'</span>: <span class="number">1.0</span>}] + self.stats
+        new_run_lengths = np.zeros_like(self.run_lengths)
+        <span class="keyword">for</span> r <span class="keyword">in</span> range(len(self.run_lengths)):
+            H_r = self.hazard(r)
+            prob_continue = (<span class="number">1</span> - H_r) * self.run_lengths[r]
+            evidence = self.predictive_pdf(x, self.stats[r])
+            new_run_lengths[r] = prob_continue * evidence
+        self.run_lengths = new_run_lengths
+        self.run_lengths /= (self.run_lengths.<span class="function">sum</span>() + <span class="number">1e-100</span>)
+        <span class="keyword">return</span> self.run_lengths.copy()
+    
+    <span class="keyword">def</span> <span class="function">changepoint_probability</span>(self): <span class="keyword">return</span> self.run_lengths[<span class="number">0</span>]
+      </div></div>
+      <div class="callout callout-success"><span class="callout-icon">✦</span><span><strong>Aplicación directa para trading:</strong> BOCPD produce una serie temporal de P(r₀=0 | x₁:t). Cuando esta probabilidad supera un threshold (típicamente 0.6-0.8), tienes una señal de transición de régimen.</span></div>
+      <div class="resource-row"><span class="resource-pill">Adams & MacKay 2007</span><span class="resource-pill">bayesian_changepoint_detection</span></div>
+    </div></div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(245,158,11,0.15)">▸</div><div class="topic-title">Structural Breaks — Tests Formales (Chow, Andrews, Bai-Perron)</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-core">core</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>Los tests de structural break responden a una pregunta diferente: dado que sabes (o sospechas) que hay un cambio en los parámetros, ¿cuál es la evidencia estadística para rechazarlo?</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">3.1</span>Chow Test (1960) — el test clásico para un break point conocido</div><div class="subtopic-text"><p>Gregory Chow desarrolló el test para cuando el break point τ es conocido a priori. La hipótesis nula es que los coeficientes son iguales antes y después de τ.</p><div class="formula-box">
+<span class="comment">// Chow Test Statistic</span>
+F = [(RSS_pooled - (RSS₁ + RSS₂)) / k] / [(RSS₁ + RSS₂) / (n - 2k)]
+<span class="comment">// Crítico: τ debe ser conocido, no estimado de los datos</span>
+      </div><p><strong>Limitación severa:</strong> si estimas τ de los datos, la distribución del estadístico cambia y el test se invalida.</p></div></div>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">3.2</span>Andrews SupF y Bai-Perron — múltiples breaks desconocidos</div><div class="subtopic-text"><p>Andrews (1993) propuso buscar el break point sobre todo el rango posible. Bai & Perron (1998, 2003) desarrollaron el framework completo para múltiples cambios desconocidos simultáneos. Este es el estándar dorado.</p></div></div>
+      <div class="code-block"><div class="code-header"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div><span class="code-lang">python</span></div><div class="code-content">
+<span class="comment"># Bai-Perron con ruptures</span>
+<span class="keyword">import</span> ruptures <span class="keyword">as</span> rpt
+y = np.load(<span class="string">'market_returns.npy'</span>)
+algo = rpt.Dynp(model=<span class="string">"l2"</span>, min_size=<span class="number">5</span>).fit(y)
+<span class="keyword">for</span> k <span class="keyword">in</span> range(<span class="number">1</span>, <span class="number">8</span>):
+    bkps = algo.predict(n_bkps=k)
+    <span class="comment"># Calcular BIC/AIC</span>
+<span class="comment"># CUSUM test</span>
+cusum_stat = np.cumsum(y - y.mean())
+cusum_scaled = cusum_stat / np.std(y)
+      </div></div>
+      <div class="callout callout-warning"><span class="callout-icon">⚠</span><span><strong>Problema de specification:</strong> Si el número de breaks m es seleccionado por los datos y luego se reportan intervalos de confianza, estos intervalos son inválidos.</span></div>
+      <div class="resource-row"><span class="resource-pill">Bai & Perron 1998 JoE</span><span class="resource-pill">Andrews 1993 Econometrica</span></div>
+    </div></div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(245,158,11,0.15)">▸</div><div class="topic-title">Criterios de información y selección del número de regímenes K</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-core">core</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>La selección de K (número de regímenes) es uno de los problemas más delicados en la práctica. K=2 es casi siempre demasiado simple para mercados financieros; K>5 introduce sobreparametrización.</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">4.1</span>Los tres criterios principales y sus propiedades</div><div class="subtopic-text"><p><strong>AIC (Akaike Information Criterion):</strong> AIC = 2k - 2ln(L̂). Tiende a sobreestimar K en muestras finitas. Usar cuando el objetivo es forecasting puro.</p><p><strong>BIC (Bayesian Information Criterion):</strong> BIC = k·ln(n) - 2ln(L̂). Penaliza más agresivamente. Teóricamente consistente.</p><p><strong>HQIC (Hannan-Quinn):</strong> HQ = 2k·ln(ln(n)) - 2ln(L̂). Compromiso entre AIC y BIC.</p></div></div>
+      <div class="cmp-table-wrap"><table class="cmp-table"><thead><tr><th>Criterio</th><th>Penalización</th><th>Tendencia</th><th>Uso óptimo</th></tr></thead><tbody><tr><td>AIC</td><td>2k</td><td>Sobrestima K</td><td>Forecasting puro</td></tr><tr><td>BIC</td><td>k·ln(n)</td><td>Subrestima K</td><td>Identificación de regímenes</td></tr><tr><td>HQIC</td><td>2k·ln(ln(n))</td><td>Intermedio</td><td>Dependencia temporal fuerte</td></tr></tbody></table></div>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">4.2</span>Cross-validation para series temporales</div><div class="subtopic-text"><p>Para datos temporales, usar walk-forward validation:</p></div></div>
+      <div class="code-block"><div class="code-header"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div><span class="code-lang">python</span></div><div class="code-content">
+<span class="keyword">def</span> <span class="function">wf_cv_hmm</span>(returns, max_K=<span class="number">6</span>, train_size=<span class="number">500</span>, step=<span class="number">50</span>):
+    results = {k: [] <span class="keyword">for</span> k <span class="keyword">in</span> range(<span class="number">1</span>, max_K+<span class="number">1</span>)}
+    <span class="keyword">for</span> start <span class="keyword">in</span> range(<span class="number">0</span>, len(returns)-train_size, step):
+        train = returns[start:start+train_size]
+        test = returns[start+train_size:start+train_size+step]
+        <span class="keyword">for</span> K <span class="keyword">in</span> range(<span class="number">1</span>, max_K+<span class="number">1</span>):
+            model = GaussianHMM(n_components=K)
+            model.fit(train.reshape(-<span class="number">1</span>,<span class="number">1</span>))
+            ll = model.score(test.reshape(-<span class="number">1</span>,<span class="number">1</span>))
+            results[K].append(ll)
+    <span class="keyword">return</span> {k: np.mean(v) <span class="keyword">for</span> k, v in results.items()}
+      </div></div>
+      <div class="callout callout-info"><span class="callout-icon">◈</span><span><strong>Regla práctica para K en futuros:</strong> Para ES/NQ con datos diarios, K=3 captura "bull trending", "bear trending", y "range/mean-reversion". K=4 añade "crisis/crash" como estado separado.</span></div>
+      <div class="resource-row"><span class="resource-pill">Burnham & Anderson 2002</span><span class="resource-pill">Walk-forward validation guide</span></div>
+    </div></div>
+  </div>
+</section>
+
+<section class="module" id="m4">
+  <div class="module-header"><div class="module-num">// MÓDULO 02</div><h2 class="module-title">Hamilton Markov-Switching Model — Arquitectura Completa</h2><p class="module-desc">El paper de James D. Hamilton (1989, Econometrica) estableció el marco teórico que subyace a toda la detección moderna de regímenes.</p></div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(139,92,246,0.15)">▸</div><div class="topic-title">Especificación del MS-AR(p) y las tres variantes</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-advanced">avanzado</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>El modelo MS-AR(p): yₜ = μ(Sₜ) + Σᵢ φᵢ(Sₜ)(yₜ₋ᵢ - μ(Sₜ₋ᵢ)) + σ(Sₜ)εₜ</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">1.1</span>MSM, MSV y MSMV — tres niveles de switch</div><div class="subtopic-text"><p><strong>MSM (Markov Switching in Mean):</strong> Solo la media μ(Sₜ) cambia.</p><p><strong>MSV (Markov Switching in Variance):</strong> Solo la varianza σ²(Sₜ) cambia.</p><p><strong>MSMV (Markov Switching in Mean and Variance):</strong> Ambos parámetros cambian. La especificación más general.</p></div></div>
+      <div class="cmp-table-wrap"><table class="cmp-table"><thead><tr><th>Variante</th><th>Parámetros</th><th>Aplicación</th></tr></thead><tbody><tr><td>MSM</td><td>μ₁, μ₂, σ²</td><td>Cambios en drift</td></tr><tr><td>MSV</td><td>μ, σ₁², σ₂²</td><td>Regímenes de volatilidad</td></tr><tr><td>MSMV</td><td>μ₁, μ₂, σ₁², σ₂²</td><td>Regímenes completos</td></tr></tbody></table></div>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">1.2</span>La matriz de transición P y sus propiedades</div><div class="subtopic-text"><p>La duración esperada en cada régimen: E[duración | régimen i] = 1 / (1 - pᵢᵢ)</p><p>Si p₁₁ = 0.97 (bull market), la duración esperada es 33 días.</p></div></div>
+      <div class="formula-box">
+<span class="comment">// Matriz de transición K=2</span>
+P = | p₁₁  p₁₂ |
+    | p₂₁  p₂₂ |
+<span class="highlight">E[duración | régimen i] = 1 / (1 - pᵢᵢ)</span>
+<span class="comment">// Ejemplo: p₁₁ = 0.97 → E[duración bull] = 33.3 días</span>
+      </div>
+      <div class="code-block"><div class="code-header"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div><span class="code-lang">python</span></div><div class="code-content">
+<span class="keyword">from</span> statsmodels.tsa.regime_switching.markov_autoregression <span class="keyword">import</span> MarkovAutoregression
+model = MarkovAutoregression(
+    endog=returns,
+    k_regimes=<span class="number">2</span>,
+    order=<span class="number">1</span>,
+    switching_ar=<span class="keyword">True</span>,
+    switching_mean=<span class="keyword">True</span>,
+    switching_variance=<span class="keyword">True</span>
+)
+result = model.fit(method=<span class="string">'bfgs'</span>, maxiter=<span class="number">500</span>, n_init=<span class="number">50</span>)
+filtered_probs = result.smoothed_marginal_probabilities[<span class="number">0</span>]
+      </div></div>
+      <div class="resource-row"><span class="resource-pill">Hamilton 1989 Econometrica</span><span class="resource-pill">Kim & Nelson 1999</span><span class="resource-pill">statsmodels MarkovAutoregression</span></div>
+    </div></div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(139,92,246,0.15)">▸</div><div class="topic-title">Filtro de Hamilton y Smoother de Kim</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-advanced">avanzado</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>El filtro de Hamilton es el corazón computacional del MS model.</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">2.1</span>El algoritmo de filtrado — paso a paso</div><div class="subtopic-text"><p><strong>Prediction step:</strong> ξₜ₊₁|t = P' · ξₜ|t</p><p><strong>Update step:</strong> ξₜ₊₁|t₊₁ = (ηₜ₊₁ ⊙ ξₜ₊₁|t) / Σⱼ ηₜ₊₁(j)·ξₜ₊₁|j</p></div></div>
+      <div class="formula-box">
+<span class="comment">// FILTRO DE HAMILTON</span>
+<span class="comment">// PREDICTION: t → t+1</span>
+ξₜ₊₁|t = P' · ξₜ|t
+<span class="comment">// UPDATE: incorporar observación yₜ₊₁</span>
+ηₜ₊₁(i) = p(yₜ₊₁ | Sₜ₊₁=i, y₁:ₜ)
+ξₜ₊₁|t₊₁ = (ηₜ₊₁ ⊙ ξₜ₊₁|t) / Σⱼ ηₜ₊₁(j)·ξₜ₊₁|j
+<span class="highlight">Filtrada: ξₜ|t (datos hasta t) — online</span>
+<span class="highlight">Suavizada: ξₜ|T (datos hasta T) — offline</span>
+      </div>
+      <div class="code-block"><div class="code-header"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div><span class="code-lang">python</span></div><div class="code-content">
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> scipy.stats <span class="keyword">import</span> norm
+
+<span class="keyword">class</span> <span class="function">HamiltonFilter</span>:
+    <span class="keyword">def</span> <span class="function">filter</span>(self, y_series):
+        T = len(y_series)
+        filtered = np.zeros((T, self.K))
+        xi = np.array([<span class="number">0.7</span>, <span class="number">0.3</span>])
+        <span class="keyword">for</span> t <span class="keyword">in</span> range(T):
+            xi_pred = self.P.T @ xi
+            eta = np.array([self.likelihood(y_series[t], s) <span class="keyword">for</span> s <span class="keyword">in</span> range(self.K)])
+            xi_unnorm = eta * xi_pred
+            xi = xi_unnorm / xi_unnorm.<span class="function">sum</span>()
+            filtered[t] = xi
+        <span class="keyword">return</span> filtered
+      </div></div>
+      <div class="callout callout-info"><span class="callout-icon">◈</span><span><strong>Precision numérica:</strong> Cuando las likelihoods son muy pequeñas, usar log-space para evitar underflow.</span></div>
+      <div class="resource-row"><span class="resource-pill">Hamilton 1989 JoE</span><span class="resource-pill">Kim 1994 JoE</span></div>
+    </div></div>
+  </div>
+</section>
+
+<section class="module" id="m7">
+  <div class="module-header"><div class="module-num">// MÓDULO 03</div><h2 class="module-title">Hidden Markov Models — Arquitectura y los Tres Problemas de Rabiner</h2><p class="module-desc">Lawrence Rabiner (1989, IEEE) formalizó la teoría de HMMs con tres problemas fundamentales.</p></div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(6,182,212,0.15)">▸</div><div class="topic-title">Problema 1 — Evaluation: Algoritmo Forward</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-core">core</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>Dada una secuencia de observaciones O y un modelo λ, ¿cuál es la probabilidad P(O|λ)?</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">1.1</span>El algoritmo forward paso a paso</div><div class="subtopic-text"><p>Definimos αₜ(i) = P(o₁, o₂, ..., oₜ, Sₜ=i | λ)</p><p><strong>Inicialización:</strong> α₁(i) = πᵢ · bᵢ(o₁)</p><p><strong>Recursión:</strong> αₜ(j) = bⱼ(oₜ) · Σᵢ [αₜ₋₁(i) · aᵢⱼ]</p><p><strong>Terminación:</strong> P(O|λ) = Σᵢ αT(i)</p></div></div>
+      <div class="formula-box">
+<span class="comment">// Algoritmo Forward</span>
+<span class="comment">// Inicialización (t=1)</span>
+α₁(i) = πᵢ · bᵢ(o₁)
+<span class="comment">// Recursión (t = 2, 3, ..., T)</span>
+αₜ(j) = bⱼ(oₜ) · Σᵢ [αₜ₋₁(i) · aᵢⱼ]
+<span class="highlight">log αₜ(j) = log bⱼ(oₜ) + logsumexp( log αₜ₋₁(i) + log aᵢⱼ )</span>
+      </div>
+      <div class="code-block"><div class="code-header"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div><span class="code-lang">python</span></div><div class="code-content">
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">from</span> scipy.special <span class="keyword">import</span> logsumexp
+
+<span class="keyword">def</span> <span class="function">forward_log</span>(observations, A, B, pi):
+    T = len(observations); K = len(pi)
+    log_alpha = np.zeros((T, K))
+    log_alpha[<span class="number">0</span>] = pi + B[:, observations[<span class="number">0</span>]]
+    <span class="keyword">for</span> t <span class="keyword">in</span> range(<span class="number">1</span>, T):
+        <span class="keyword">for</span> j <span class="keyword">in</span> range(K):
+            log_alpha[t, j] = B[j, observations[t]] + logsumexp(log_alpha[t-<span class="number">1</span>] + A[:, j])
+    log_likelihood = logsumexp(log_alpha[-<span class="number">1</span>])
+    <span class="keyword">return</span> log_alpha, log_likelihood
+      </div></div>
+      <div class="callout callout-info"><span class="callout-icon">◈</span><span><strong>Importancia del log-space:</strong> Para secuencias largas (T > 100), el producto de probabilidades causa underflow. En log-space es estable.</span></div>
+    </div></div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(6,182,212,0.15)">▸</div><div class="topic-title">Problema 2 — Decoding: Algoritmo de Viterbi</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-core">core</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>¿Cuál es la secuencia de estados más probable que generó la secuencia de observaciones?</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">2.1</span>Viterbi vs. decoding marginal</div><div class="subtopic-text"><p>Viterbi encuentra Q* = argmax_Q P(Q, O|λ). El decoding marginal encuentra argmax_i P(Sₜ=i | O) independientemente.</p><p>Para trading, el Viterbi es más apropiado porque queremos la secuencia completa de regímenes.</p></div></div>
+      <div class="code-block"><div class="code-header"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div><span class="code-lang">python</span></div><div class="code-content">
+<span class="keyword">def</span> <span class="function">viterbi</span>(observations, A, B, pi):
+    T = len(observations); K = len(pi)
+    delta = np.zeros((T, K)); psi = np.zeros((T, K), dtype=int)
+    delta[<span class="number">0</span>] = pi + B[:, observations[<span class="number">0</span>]]
+    <span class="keyword">for</span> t <span class="keyword">in</span> range(<span class="number">1</span>, T):
+        <span class="keyword">for</span> j <span class="keyword">in</span> range(K):
+            scores = delta[t-<span class="number">1</span>] + A[:, j]
+            psi[t, j] = np.argmax(scores)
+            delta[t, j] = np.max(scores) + B[j, observations[t]]
+    q_star = np.zeros(T, dtype=int)
+    q_star[T-<span class="number">1</span>] = np.argmax(delta[T-<span class="number">1</span>])
+    <span class="keyword">for</span> t <span class="keyword">in</span> range(T-<span class="number">2</span>, -<span class="number">1</span>, -<span class="number">1</span>):
+        q_star[t] = psi[t+<span class="number">1</span>, q_star[t+<span class="number">1</span]]
+    <span class="keyword">return</span> q_star
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(6,182,212,0.15)">▸</div><div class="topic-title">Problema 3 — Learning: Baum-Welch (EM para HMM)</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-advanced">avanzado</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>Baum-Welch es el algoritmo EM para estimar los parámetros de un HMM.</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">3.1</span>E-step: forward-backward</div><div class="subtopic-text"><p>γₜ(i) = P(Sₜ=i | O, λ) — probabilidad marginal</p><p>ξₜ(i,j) = P(Sₜ=i, Sₜ₊₁=j | O, λ) — probabilidad conjunta</p></div></div>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">3.2</span>M-step: actualización de parámetros</div><div class="subtopic-text"><p>π̂ᵢ = γ₁(i)</p><p>âᵢⱼ = Σₜ ξₜ(i,j) / Σₜ Σₖ ξₜ(i,k)</p><p>μ̂ᵢ = Σₜ γₜ(i)·oₜ / Σₜ γₜ(i)</p></div></div>
+      <div class="formula-box">
+<span class="comment">// Baum-Welch: E-step y M-step</span>
+γₜ(i) = αₜ(i)βₜ(i) / Σⱼ αₜ(j)βₜ(j)
+ξₜ(i,j) = αₜ(i)aᵢⱼbⱼ(oₜ₊₁)βₜ₊₁(j) / P(O|λ)
+π̂ᵢ = γ₁(i)
+âᵢⱼ = Σₜ ξₜ(i,j) / Σₜ Σₖ ξₜ(i,k)
+      </div>
+      <div class="resource-row"><span class="resource-pill">Rabiner 1989 IEEE</span><span class="resource-pill">Baum et al. 1970</span></div>
+    </div></div>
+  </div>
+</section>
+
+<section class="module" id="m10">
+  <div class="module-header"><div class="module-num">// MÓDULO 04</div><h2 class="module-title">Volatility Regimes — RS-GARCH, HAR-RV, VIX Term Structure</h2><p class="module-desc">La volatilidad no es constante — cambia dramáticamente entre regímenes.</p></div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(239,68,68,0.15)">▸</div><div class="topic-title">HAR-RV — Heterogeneous Autoregressive Realized Volatility (Corsi 2009)</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-quant">quant</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>HAR-RV modela la volatilidad realizada como combinación de componentes de diferentes horizontes temporales.</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">1.1</span>La mecánica del HAR</div><div class="subtopic-text"><p>RV_{t+1} = c + β_D·RV_t + β_W·RV^(W)_t + β_M·RV^(M)_t + εₜ</p><p>donde RV^(W)_t = media móvil 5 días, RV^(M)_t = media móvil 22 días.</p></div></div>
+      <div class="formula-box">
+<span class="comment">// HAR-RV estándar</span>
+RV_{t+1} = c + β_D·RV_t + β_W·RV^(W)_t + β_M·RV^(M)_t + εₜ
+<span class="highlight">β_D ≈ 0.4-0.6 (alta persistencia diaria)</span>
+<span class="highlight">β_W ≈ 0.1-0.2 (contribución semanal)</span>
+<span class="highlight">β_M ≈ 0.05-0.15 (contribución mensual)</span>
+      </div>
+      <div class="code-block"><div class="code-header"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div><span class="code-lang">python</span></div><div class="code-content">
+<span class="keyword">import</span> numpy <span class="keyword">as</span> np
+<span class="keyword">def</span> <span class="function">har_rv_regression</span>(rv, horizons=[<span class="number">1</span>, <span class="number">5</span>, <span class="number">22</span>]):
+    df = pd.DataFrame({<span class="string">'RV'</span>: rv})
+    df[<span class="string">'RV_D'</span>] = rv
+    <span class="keyword">for</span> h, name <span class="keyword">in</span> zip(horizons, [<span class="string">'RV_W'</span>, <span class="string">'RV_M'</span>]):
+        df[name] = rv.rolling(h).mean().shift(<span class="number">1</span>)
+    df = df.dropna()
+    X = df[[<span class="string">'RV_D'</span>, <span class="string">'RV_W'</span>, <span class="string">'RV_M'</span>]]
+    y = df[<span class="string">'RV'</span>]
+    <span class="keyword">return</span> LinearRegression().fit(X, y)
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(239,68,68,0.15)">▸</div><div class="topic-title">VIX Term Structure — Contango vs Backwardation</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-core">core</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>El VIX no es solo un número — su estructura temporal revela cómo el mercado pricea el riesgo.</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">2.1</span>Contango — régimen normal de mercado</div><div class="subtopic-text"><p>Contango: la curva de futuros del VIX tiene pendiente positiva. Los vendedores de opciones reciben prima por esperar.</p></div></div>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">2.2</span>Backwardation — régimen de stress</div><div class="subtopic-text"><p>Backwardation: VIX spot > VIX3M > VIX6M. Históricamente, backwardation >15% implica sharpe negativo para estrategias que short vol.</p></div></div>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">2.3</span>VVIX — la volatilidad del VIX</div><div class="subtopic-text"><p>VVIX alto + VIX bajo = complacencia frágil. El ratio VVIX/VIX > 5 sugiere fragilidad sistémica.</p></div></div>
+      <div class="formula-box">
+<span class="comment">// VIX Term Structure</span>
+<span class="highlight">CCI = (VIX_3M - VIX_1M) / VIX_1M</span>
+<span class="highlight">FRAGILITY = VVIX / VIX</span>
+<span class="comment">// VVIX/VIX > 5 → régimen frágil</span>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<section class="module" id="m13">
+  <div class="module-header"><div class="module-num">// MÓDULO 05</div><h2 class="module-title">Microestructura y Order Flow — PIN, VPIN, OFI</h2><p class="module-desc">La microestructura del mercado revela información que los precios agregados ocultan.</p></div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(16,185,129,0.15)">▸</div><div class="topic-title">PIN — Probability of Informed Trading (Easley & O'Hara)</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-advanced">avanzado</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>PIN cuantifica la probabilidad de que una orden provenga de un trader informado.</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">1.1</span>El modelo de microestructura de PIN</div><div class="subtopic-text"><p>PIN = λᵢ / (λᵢ + λᵤ). Un PIN > 0.5 indica mercado muy adversarial.</p></div></div>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">1.2</span>VPIN — Volume-synchronized PIN</div><div class="subtopic-text"><p>VPIN = |V_buy - V_sell| / V_total</p><p>VPIN > 0.5 → percentil 90 → régimen de alta toxicidad</p><p>VPIN > 0.7 → percentil 99 → crash inminente</p></div></div>
+      <div class="formula-box">
+<span class="comment">// PIN</span>
+<span class="highlight">PIN = α / (α + μ)</span>
+<span class="comment">// VPIN</span>
+<span class="highlight">VPIN = |V_buy - V_sell| / V_total</span>
+      </div>
+      <div class="code-block"><div class="code-header"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div><span class="code-lang">python</span></div><div class="code-content">
+<span class="keyword">class</span> <span class="function">VPINCalculator</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, bucket_size=<span class="number">100</span>):
+        self.bucket_size = bucket_size
+        self.bucket_buys = []
+        self.bucket_sells = []
+    
+    <span class="keyword">def</span> <span class="function">update</span>(self, trade):
+        side = self.classify_trade(trade)
+        <span class="keyword">if</span> len(self.bucket_buys[-<span class="number">1</span>]) >= self.bucket_size:
+            self.bucket_buys.append([]); self.bucket_sells.append([])
+        <span class="keyword">return</span> self.current_vpin()
+    
+    <span class="keyword">def</span> <span class="function">current_vpin</span>(self):
+        buys = sum(len(b) <span class="keyword">for</span> b <span class="keyword">in</span> self.bucket_buys[-<span class="number">50</span>:])
+        sells = sum(len(b) <span class="keyword">for</span> b <span class="keyword">in</span> self.bucket_sells[-<span class="number">50</span>:])
+        <span class="keyword">return</span> abs(buys - sells) / (buys + sells + <span class="number">1e-10</span>)
+      </div></div>
+      <div class="callout callout-warning"><span class="callout-icon">⚠</span><span><strong>Limitación de PIN/VPIN:</strong> Asumen que el flujo de informed traders es direccional. Para mayor granularidad, usar OFI.</span></div>
+    </div></div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(16,185,129,0.15)">▸</div><div class="topic-title">OFI — Order Flow Imbalance y DOM Regimes</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-advanced">avanzado</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>OFI captura el desequilibrio entre presión compradora y vendedora a nivel de libro de órdenes.</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">2.1</span>OFI persistente — accumulation/distribution</div><div class="subtopic-text"><p>OFI positivo + precio subiendo = acumulación institucional</p><p>OFI positivo + precio plano = distribución oculta</p></div></div>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">2.2</span>DOM Absorption y Exhaustion</div><div class="subtopic-text"><p><strong>Absorption:</strong> nivel donde hay órdenes grandes que no se atraviesan = límite defensivo.</p><p><strong>Exhaustion:</strong> precio se mueve pero volumen no aumenta = divergencia.</p></div></div>
+    </div></div>
+  </div>
+</section>
+
+<section class="module" id="m19">
+  <div class="module-header"><div class="module-num">// MÓDULO 07</div><h2 class="module-title">Machine Learning para Clasificación de Regímenes</h2><p class="module-desc">Los métodos tradicionales son elegantes pero asumen K fijo. ML permite detectar regímenes sin especificar K a priori.</p></div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(236,72,153,0.15)">▸</div><div class="topic-title">GMM — Gaussian Mixture Model y clustering para regímenes</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-core">core</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>GMM es un HMM sin dependencia temporal.</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">1.1</span>GMM para feature space de mercado</div><div class="subtopic-text"><p>Features: return_rolling, vol_rolling, skew_rolling, vol_ratio, vix_level, vix_slope, ofi_rolling, correlation_rolling</p></div></div>
+      <div class="code-block"><div class="code-header"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div><span class="code-lang">python</span></div><div class="code-content">
+<span class="keyword">from</span> sklearn.mixture <span class="keyword">import</span> GaussianMixture
+<span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler
+
+scaler = StandardScaler()
+features_scaled = scaler.fit_transform(features)
+bic_scores = []
+<span class="keyword">for</span> K <span class="keyword">in</span> range(<span class="number">2</span>, <span class="number">8</span>):
+    gmm = GaussianMixture(n_components=K)
+    gmm.fit(features_scaled)
+    bic_scores.append(gmm.bic(features_scaled))
+best_K = np.argmin(bic_scores) + <span class="number">2</span>
+      </div></div>
+    </div></div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(236,72,153,0.15)">▸</div><div class="topic-title">LSTM para clasificación de regímenes</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-advanced">avanzado</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>LSTM captura dependencias de largo plazo que HMM pierde.</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">2.1</span>Arquitectura LSTM</div><div class="subtopic-text"><p>Arquitectura recomendada: LSTM(64) → Dropout(0.3) → LSTM(32) → Dense(K, softmax)</p></div></div>
+      <div class="code-block"><div class="code-header"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div><span class="code-lang">python</span></div><div class="code-content">
+<span class="keyword">from</span> tensorflow.keras.models <span class="keyword">import</span> Sequential
+<span class="keyword">from</span> tensorflow.keras.layers <span class="keyword">import</span> LSTM, Dense, Dropout
+
+model = Sequential([
+    LSTM(<span class="number">64</span>, input_shape=(<span class="number">20</span>, n_features), return_sequences=<span class="keyword">True</span>),
+    Dropout(<span class="number">0.3</span>),
+    LSTM(<span class="number">32</span>),
+    Dropout(<span class="number">0.3</span>),
+    Dense(<span class="number">3</span>, activation=<span class="string">'softmax'</span>)
+])
+model.compile(optimizer=<span class="string">'adam'</span>, loss=<span class="string">'sparse_categorical_crossentropy'</span>)
+      </div></div>
+      <div class="callout callout-warning"><span class="callout-icon">⚠</span><span><strong>Critical:</strong> Usar walk-forward validation, nunca random split para series temporales.</span></div>
+    </div></div>
+  </div>
+</section>
+
+<section class="module" id="m22">
+  <div class="module-header"><div class="module-num">// MÓDULO 08</div><h2 class="module-title">Options Regimes — GEX/DEX, Vol Surface, 0DTE</h2><p class="module-desc">Las opciones revelan información sobre el comportamiento de los participantes del mercado.</p></div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(99,102,241,0.15)">▸</div><div class="topic-title">GEX / DEX — Gamma Exposure</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-core">core</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>GEX = Σ Γ · ΔS · OpenInterest. DEX = dealers' gamma net exposure.</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">1.1</span>Concepción</div><div class="subtopic-text"><p>Dealers long gamma = estabilizadores</p><p>Dealers short gamma = desestabilizadores</p></div></div>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">1.2</span>Charm y vanna flows</div><div class="subtopic-text"><p>Mecanismos por los cuales el hedging de opciones distorsiona el subyacente.</p></div></div>
+      <div class="formula-box">
+<span class="comment">// GEX</span>
+<span class="highlight">GEX = Σ Γ · ΔS · OpenInterest</span>
+<span class="comment">// GEX positivo → dealers long gamma → estabilizan</span>
+<span class="comment">// GEX negativo → dealers short gamma → desestabilizan</span>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(99,102,241,0.15)">▸</div><div class="topic-title">Vol Surface — Skew, Term Structure, Butterfly</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-advanced">avanzado</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>La superficie de volatilidad revela el precio del riesgo por strike y vencimiento.</p>
+      <p><strong>Skew:</strong> ATM vs OTM vol diferencia.</p>
+      <p><strong>Term Structure:</strong> Contango vs backwardation.</p>
+      <p><strong>Butterfly:</strong> Relación entre strikes extremos y centro.</p>
+    </div></div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(99,102,241,0.15)">▸</div><div class="topic-title">0DTE — Zero Days to Expiration</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-advanced">avanzado</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>0DTE: opciones con menos de 1 día de vida.</p>
+      <p><strong>Características:</strong> Gamma extremamente alta, Theta decay acelerado.</p>
+      <p><strong>Estrategias:</strong> Directional con gestión de riesgo, Iron condors.</p>
+    </div></div>
+  </div>
+</section>
+
+<section class="module" id="m25">
+  <div class="module-header"><div class="module-num">// MÓDULO 09</div><h2 class="module-title">Real-Time Detection — SPRT, CUSUM, Particle Filters</h2><p class="module-desc">Detección de regímenes en tiempo real para trading algorítmico.</p></div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(59,130,246,0.15)">▸</div><div class="topic-title">SPRT & CUSUM — Sequential Probability Ratio Test</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-core">core</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>SPRT minimiza el expected sample size para detectar cambios.</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">1.1</span>SPRT</div><div class="subtopic-text"><p>H₀: μ = μ₀, H₁: μ = μ₁</p><p>Log-likelihood ratio: Sₙ = Σ log(Λᵢ)</p></div></div>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">1.2</span>CUSUM</div><div class="subtopic-text"><p>CUSUM = Σ (xₜ - μ₀)</p><p>Alertas cuando CUSUM sale de los bands ±k.</p></div></div>
+    </div></div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(59,130,246,0.15)">▸</div><div class="topic-title">Particle Filters — Sequential Monte Carlo</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-advanced">avanzado</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>Particle filters usan simulaciones para tracking de estados.</p>
+      <p><strong>Algoritmo:</strong></p>
+      <p>1. Prediction: propagate particles según modelo</p>
+      <p>2. Update: reweight según likelihood</p>
+      <p>3. Resampling: eliminar partículas de baja weight</p>
+    </div></div>
+  </div>
+</section>
+
+<section class="module" id="m28">
+  <div class="module-header"><div class="module-num">// MÓDULO 10</div><h2 class="module-title">Trading Applications — Position Sizing, Strategy Selection y Portfolio</h2><p class="module-desc">Aplicación práctica del conocimiento de regímenes al trading.</p></div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(52,211,153,0.15)">▸</div><div class="topic-title">Kelly Fraction por Régimen y Volatility Targeting</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-core">core</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>Kelly criterion es la apuesta óptima para maximizar el logarithm del capital.</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">1.1</span>Kelly regime-conditional</div><div class="subtopic-text"><p>f*(Sₜ=k) = μₖ / σₖ²</p><p>f_total = Σₖ P(Sₜ=k) · f*(k)</p></div></div>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">1.2</span>Volatility Targeting</div><div class="subtopic-text"><p>size = σ_target / σ_forecast(Sₜ)</p><p>Normal (σ=15%): size = 1x</p><p>Crisis (σ=45%): size = 0.33x</p></div></div>
+      <div class="formula-box">
+<span class="comment">// Kelly Criterion</span>
+<span class="highlight">f* = μ / σ²</span>
+<span class="comment">// Kelly regime-conditional</span>
+<span class="highlight">f*(Sₜ=k) = μₖ / σₖ²</span>
+<span class="highlight">f_total = Σₖ P(Sₜ=k | datos) · f*(k)</span>
+      </div>
+      <div class="code-block"><div class="code-header"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div><span class="code-lang">python</span></div><div class="code-content">
+<span class="keyword">class</span> <span class="function">RegimeAwareSizer</span>:
+    <span class="keyword">def</span> <span class="function">kelly_by_regime</span>(self, regime):
+        params = self.regime_params[regime]
+        f_raw = params[<span class="string">'mu'</span>] / (params[<span class="string">'sigma'</span>]**<span class="number">2</span>)
+        <span class="keyword">return</span> max(f_raw * <span class="number">0.25</span>, <span class="number">0</span>)
+    
+    <span class="keyword">def</span> <span class="function">get_size</span>(self, regime_probs):
+        size = <span class="number">0</span>
+        <span class="keyword">for</span> regime, prob <span class="keyword">in</span> regime_probs.items():
+            size += prob * self.kelly_by_regime(regime)
+        <span class="keyword">return</span> size
+      </div></div>
+      <div class="callout callout-success"><span class="callout-icon">✦</span><span><strong>Fractional Kelly:</strong> Usar ¼ Kelly para robustez porque la estimación de μ y σ tiene error.</span></div>
+    </div></div>
+  </div>
+
+  <div class="topic-card">
+    <div class="topic-header" onclick="toggle(this)"><div class="topic-left"><div class="topic-icon" style="background:rgba(52,211,153,0.15)">▸</div><div class="topic-title">Strategy Selection por Régimen y el Edge de la Transición</div></div><div style="display:flex;gap:10px;align-items:center"><span class="topic-tag tag-advanced">avanzado</span><span class="topic-chevron">▾</span></div></div>
+    <div class="topic-body"><div class="topic-content">
+      <p>No existe una estrategia universal que funcione en todos los regímenes.</p>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">2.1</span>Regime-Strategy Matrix</div><div class="subtopic-text"><p><strong>Bull low-vol:</strong> trend following, momentum, breakout</p><p><strong>Bear trending:</strong> short selling, fade rallies</p><p><strong>Range:</strong> mean-reversion, stat arb</p><p><strong>Crisis:</strong> defensive, reduced exposure, tail hedges</p></div></div>
+      <div class="subtopic-block"><div class="subtopic-title"><span class="subtopic-num">2.2</span>El edge de la transición</div><div class="subtopic-text"><p>Cuando P(nuevo_régimen) cruza 0.3-0.4, existe una ventana de 1-5 barras donde el precio aún refleja el régimen anterior.</p></div></div>
+      <div class="formula-box">
+<span class="comment">// Regime-Strategy Matrix</span>
+<span class="highlight">strategy_allocation = Σₖ P(Sₜ=k) · W(k)</span>
+<span class="comment">// threshold de transición</span>
+<span class="highlight">threshold = 0.3 + ADL_estimate / 100</span>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+</main>
+<script>
+function toggle(header) {
+  const card = header.closest('.topic-card');
+  card.classList.toggle('open');
+}
+const mainEl = document.getElementById('main');
+const topBar = document.getElementById('topBar');
+const navProgress = document.getElementById('navProgress');
+const progressPct = document.getElementById('progressPct');
+const navItems = document.querySelectorAll('.nav-item');
+mainEl.addEventListener('scroll', () => {
+  const scrolled = mainEl.scrollTop;
+  const total = mainEl.scrollHeight - mainEl.clientHeight;
+  const pct = (scrolled / total * 100).toFixed(0);
+  topBar.style.width = pct + '%';
+  navProgress.style.width = pct + '%';
+  progressPct.textContent = pct + '%';
+  let current = '';
+  document.querySelectorAll('[id]').forEach(el => {
+    if (mainEl.scrollTop + 100 >= el.offsetTop) current = el.id;
+  });
+  navItems.forEach(item => {
+    item.classList.remove('active');
+    if (item.getAttribute('href') === '#' + current) item.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
